@@ -3,14 +3,14 @@ The `onfail` package allows specifiable behavior when an error is encountered.
 
 ## Imports
 ```go
-import "github.com/amy911/amy911/onfail"
+import "github.com/suite911/error911/onfail"
 ```
 
 ## Usage Examples
 ```go
 package main
 
-import "github.com/amy911/amy911/onfail"
+import "github.com/suite911/error911/onfail"
 
 func gowrong(onFail ...onfail.OnFail) {
 	onfail.Fail("Oh noes, something went wrong! >~<", nil, onfail.Fatal, onFail)
