@@ -143,7 +143,7 @@ func (err *E911Impl) ErrorText() string {
 		s += "\n"
 	}
 
-	s := "... " + err.log.Title + " ...\n"
+	s += "... " + err.log.Title + " ...\n"
 	return s
 }
 
@@ -167,21 +167,6 @@ func (err *E911Impl) First() error {
 // Append an entry to the log
 func (err *E911Impl) Log(language, subTitle string, msg ...interface{}) {
 	err.log.Append(language, subTitle, msg...)
-}
-
-// Return the log as HTML
-func (err *E911Impl) LogHTML() string {
-	return err.log.HTML()
-}
-
-// Return the log as markdown
-func (err *E911Impl) LogMarkDown() string {
-	return err.log.MarkDown()
-}
-
-// Return the log as text
-func (err *E911Impl) LogText() string {
-	return err.log.Text()
 }
 
 // Push an error onto the error stack
