@@ -16,6 +16,7 @@ type E911 interface {
 	LogHTML() string
 	LogMarkDown() string
 	LogText() string
+	Push(msg ...interface{})
 	Stacks() (error, string, errors.StackTrace)
 }
 
@@ -160,6 +161,15 @@ func (err *E911Impl) LogMarkDown() string {
 // Return the log as text
 func (err *E911Impl) LogText() string {
 	return err.log.Text()
+}
+
+// Push an error onto the error stack
+func (err *E911Impl) Push(msg ...interface{}) {
+	cause := err.err
+	if cause == nil {
+		cause = errors.New(err.log.Title)
+	}
+	err.err = errors.Wrap(cause, "\uff62" + fmt.Sprint(msg...) + "\uff63")
 }
 
 // Return the error stacks
