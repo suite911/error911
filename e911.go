@@ -149,7 +149,7 @@ func (err *E911Impl) ErrorText() string {
 
 // Get the first error, which is assumed to have caused the others
 func (err *E911Impl) First() error {
-	e := err
+	var e error = err
 	if e != nil {
 		for {
 			if c, ok := e.(Causer); ok {
@@ -182,7 +182,7 @@ func (err *E911Impl) Push(msg ...interface{}) {
 func (err *E911Impl) Stacks() (first error, stack string, earliestStackTrace errors.StackTrace) {
 	var est errors.StackTrace
 	var es string
-	e := err
+	var e error = err
 	if e != nil {
 		for {
 			if len(es) > 0 {
