@@ -3,11 +3,15 @@ package error911
 import (
 	"fmt"
 	"strings"
+
+	"github.com/pkg/browser"
+	"github.com/pkg/errors"
 )
 
 type E911 interface {
 	Cause() error
 	Error() string
+	ErrorBrowser()
 	ErrorHTML() string
 	ErrorMarkDown() string
 	ErrorText() string
@@ -39,6 +43,17 @@ func (err *E911Impl) Cause() error {
 // Get the text of the first error, which is assumed to have caused the others
 func (err *E911Impl) Error() string {
 	return err.First().Error()
+}
+
+// Try to open the error in a browser window for debugging
+func (err *E911Impl) ErrorBrowser() {
+	s := `<!DOCTYPE html>
+<html>
+<body>` + err.ErrorHTML() + `
+</body>
+</html>`
+	defer recover()
+	browser.OpenReader(strings.NewReader(s))
 }
 
 // Get the full text of the error stacks as HTML
