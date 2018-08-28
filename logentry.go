@@ -1,6 +1,7 @@
 package error911
 
 import (
+	"fmt"
 	"net/html"
 	"strings"
 	"time"
@@ -11,6 +12,18 @@ type LogEntry struct {
 	Language  string
 	SubTitle  string
 	Payload   string
+}
+
+func NewLogEntry(language, subTitle string, msg ...interface{}) *LogEntry {
+	return new(LogEntry).Init(language, subTitle, msg...)
+}
+
+func (le *LogEntry) Init(language, subTitle string, msg ...interface{}) *LogEntry {
+	le.TimeStamp = time.Now().UTC()
+	le.Language = language
+	le.SubTitle = subTitle
+	le.Payload = fmt.Sprint(msg...)
+	return le
 }
 
 func (le LogEntry) HTML() string {
