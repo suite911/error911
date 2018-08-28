@@ -25,6 +25,12 @@ type E911Impl struct {
 	log Log
 }
 
+// Initialize the E911 implementation with a title
+func (err *E911Impl) Init(title string) *E911Impl {
+	err.log.Title = title
+	return err
+}
+
 // Get the previous error, which is assumed to have caused tthis one
 func (err *E911Impl) Cause() error {
 	return err.err
