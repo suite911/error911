@@ -2,9 +2,10 @@ package error911
 
 import (
 	"fmt"
-	"net/html"
 	"strings"
 	"time"
+
+	"golang.org/x/net/html"
 )
 
 type LogEntry struct {
