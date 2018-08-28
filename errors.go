@@ -1,9 +1,9 @@
 package error911
 
 import (
-	"errors"
 	"fmt"
-	pkgErrors "github.com/pkg/errors"
+
+	"github.com/pkg/errors"
 )
 
 // error911.Cancel
@@ -17,7 +17,7 @@ func NewCancel(msg ...interface{}) error {
 }
 
 func (err *Cancel) Init(msg ...interface{}) error {
-	err.err = pkgErrors.Wrap(
+	err.err = errors.Wrap(
 		errors.New("Attempted to cancel an operation that does not support cancelation"),
 		fmt.Sprint(msg...),
 	)
@@ -39,7 +39,7 @@ func NewEmail(msg ...interface{}) error {
 }
 
 func (err *Email) Init(msg ...interface{}) error {
-	err.err = pkgErrors.Wrap(
+	err.err = errors.Wrap(
 		errors.New("An e-mail address was invalid"),
 		fmt.Sprint(msg...),
 	)
@@ -61,7 +61,7 @@ func NewNotSupported(msg ...interface{}) error {
 }
 
 func (err *NotSupported) Init(msg ...interface{}) error {
-	err.err = pkgErrors.Wrap(errors.New("Not supported"), fmt.Sprint(msg...))
+	err.err = errors.Wrap(errors.New("Not supported"), fmt.Sprint(msg...))
 	return err
 }
 
