@@ -59,7 +59,7 @@ func (err *E911Impl) ErrorBrowser() {
 // Get the full text of the error stacks as HTML
 func (err *E911Impl) ErrorHTML() string {
 	_, es, est := err.Stacks()
-	s := "<h2>" + l.Title + "</h2>\n"
+	s := "<h2>" + err.log.Title + "</h2>\n"
 
 	if len(err.log.Entries) > 0 {
 		s += "<h3>Log</h3>\n"
@@ -89,7 +89,7 @@ func (err *E911Impl) ErrorHTML() string {
 // Get the full text of the error stacks as markdown
 func (err *E911Impl) ErrorMarkDown() string {
 	_, es, est := err.Stacks()
-	s := "## " + l.Title + " ##\n"
+	s := "## " + err.log.Title + " ##\n"
 
 	if len(err.log.Entries) > 0 {
 		s += "### Log ###\n"
@@ -119,7 +119,7 @@ func (err *E911Impl) ErrorMarkDown() string {
 // Get the full text of the error stacks as plain text
 func (err *E911Impl) ErrorText() string {
 	_, es, est := err.Stacks()
-	s := "=== " + l.Title + " ===\n"
+	s := "=== " + err.log.Title + " ===\n"
 
 	if len(err.log.Entries) > 0 {
 		s += "=== Log\n"
@@ -143,7 +143,7 @@ func (err *E911Impl) ErrorText() string {
 		s += "\n"
 	}
 
-	s := "... " + l.Title + " ...\n"
+	s := "... " + err.log.Title + " ...\n"
 	return s
 }
 
