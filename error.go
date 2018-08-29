@@ -10,7 +10,24 @@ type Error struct {
 	err error
 }
 
-// Get the previous error, which is assumed to have caused tthis one
+func New(err error, msg ...interface{}) *Error {
+	return new(Error).Init(err, msg...)
+}
+
+func (err *Error) Init(err error, msg ...interface{}) *Error {
+	err.err = errors.Wrap(err, fmt.Sprint(msg...))
+	return err
+}
+
+func (ppError **Error) Push(title string, msg ...interface{}) {
+	if *ppError == nil {
+		*ppError = New(errors.New(title), msg...)
+	} else {
+		*ppError = errors.Wrap((*ppError).err, "\uff62" + fmt.Sprint(msg...) + "\uff63")
+	}
+}
+
+// Get the previous error, which is assumed to have caused this one
 func (err *Error) Cause() error {
 	return err.err
 }
