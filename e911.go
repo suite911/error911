@@ -8,9 +8,19 @@ import (
 	"github.com/pkg/errors"
 )
 
+// E911 holds an error and a log; it is not an error itself
 type E911 struct {
 	E911Interface
-	log Log
+	Log
+}
+
+func New(title string) *E911 {
+	return new(E911).Init(title)
+}
+
+func (e *E911) Init(title string) *E911 {
+	e.Log.Init(title)
+	return e
 }
 
 // Try to open the error in a browser window for debugging
