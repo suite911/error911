@@ -13,17 +13,17 @@ var NeverOpenErrorsInBrowser bool
 type Logs struct {
 	Entries []*LogEntry // The entries in the log
 
-	pIError *IError
+	pIError **IError
 	title   string
 }
 
 // Create a new Logs and initialize it
-func NewLog(title string, pIError *IError) *Logs {
+func NewLog(title string, pIError **IError) *Logs {
 	return new(Logs).Init(title, pIError)
 }
 
 // Initialize the Logs
-func (l *Logs) Init(title string, pIError *IError) *Logs {
+func (l *Logs) Init(title string, pIError **IError) *Logs {
 	if len(title) < 1 {
 		title = "Error"
 	}
@@ -57,7 +57,7 @@ func (l *Logs) ErrorHTML() string {
 	if l.pIError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := (*l.pIError).Stacks()
+	_, es, est := (**l.pIError).Stacks()
 	s := "<h2>" + l.title + "</h2>\n"
 
 	if len(l.Entries) > 0 {
@@ -93,7 +93,7 @@ func (l *Logs) ErrorMarkDown() string {
 	if l.pIError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := (*l.pIError).Stacks()
+	_, es, est := (**l.pIError).Stacks()
 	s := "## " + l.title + " ##\n"
 
 	if len(l.Entries) > 0 {
@@ -129,7 +129,7 @@ func (l *Logs) ErrorText() string {
 	if l.pIError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := (*l.pIError).Stacks()
+	_, es, est := (**l.pIError).Stacks()
 	s := "=== " + l.title + " ===\n"
 
 	if len(l.Entries) > 0 {
@@ -178,5 +178,5 @@ func (l *Logs) Push(msg ...interface{}) {
 	if l.pIError == nil {
 		panic("cannot push to an uninitialized error911.Logs")
 	}
-	(*l.pIError).Push_(l.title, msg...)
+	(**l.pIError).Push_(l.title, msg...)
 }
