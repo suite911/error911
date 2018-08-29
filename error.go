@@ -1,4 +1,4 @@
-package impl
+package error911
 
 import "github.com/pkg/errors"
 
