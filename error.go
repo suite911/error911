@@ -37,6 +37,15 @@ func (err *Error) First() error {
 	return e
 }
 
+// [internal] Used internally to push an error onto the error stack
+func (err *Error) Push_(title string, msg ...interface{}) {
+	cause := err.err
+	if cause == nil {
+		cause = errors.New(title)
+	}
+	err.err = errors.Wrap(cause, "\uff62" + fmt.Sprint(msg...) + "\uff63")
+}
+
 // Return the error stacks
 func (err *Error) Stacks() (first error, stack string, earliestStackTrace errors.StackTrace) {
 	var est errors.StackTrace
@@ -66,12 +75,4 @@ func (err *Error) Stacks() (first error, stack string, earliestStackTrace errors
 		}
 	}
 	return e, es, est
-}
-
-func (err *Error) push(title string, msg ...interface{}) {
-	cause := err.err
-	if cause == nil {
-		cause = errors.New(title)
-	}
-	err.err = errors.Wrap(cause, "\uff62" + fmt.Sprint(msg...) + "\uff63")
 }
