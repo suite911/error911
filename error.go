@@ -13,10 +13,10 @@ type Error interface {
 	First() error
 
 	// Initialize the Error with an error
-	Init(title string, cause error, msg ...interface{}) *MyError
+	Init(title string, cause error, msg ...interface{}) Error
 
 	// Push an error onto the Error's stack
-	Push(title string, immediateCause error, msg ...interface{}) *MyError
+	Push(title string, immediateCause error, msg ...interface{}) Error
 
 	// Return the error stacks
 	Stacks() (first error, stack string, earliestStackTrace errors.StackTrace)
