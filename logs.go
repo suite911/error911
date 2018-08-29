@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/pkg/browser"
-	"github.com/pkg/errors"
 )
 
 var NeverOpenErrorsInBrowser bool
@@ -52,7 +51,7 @@ func (l *Logs) ErrorHTML() string {
 	if l.pError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := l.pError.Stacks()
+	_, es, est := (*l.pError).Stacks()
 	s := "<h2>" + l.title + "</h2>\n"
 
 	if len(l.Entries) > 0 {
@@ -88,7 +87,7 @@ func (l *Logs) ErrorMarkDown() string {
 	if l.pError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := l.pError.Stacks()
+	_, es, est := (*l.pError).Stacks()
 	s := "## " + l.title + " ##\n"
 
 	if len(l.Entries) > 0 {
@@ -124,7 +123,7 @@ func (l *Logs) ErrorText() string {
 	if l.pError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := l.pError.Stacks()
+	_, es, est := (*l.pError).Stacks()
 	s := "=== " + l.title + " ===\n"
 
 	if len(l.Entries) > 0 {
