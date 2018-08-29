@@ -164,3 +164,8 @@ func (l *Logs) Log(language, subTitle string, msg ...interface{}) {
 	}
 	l.Entries = append(l.Entries, NewLogEntry(language, subTitle, msg...))
 }
+
+// Get the title set on init
+func (l Logs) Title() string {
+	return l.title
+}
