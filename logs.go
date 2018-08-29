@@ -83,12 +83,6 @@ func (l Logs) ErrorMarkDown() string {
 	if l.Error == nil {
 		return ""
 	}
-	if l == nil {
-		panic("cannot get the error from a nil error911.Logs")
-	}
-	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.Logs")
-	}
 	_, es, est := l.Error.Stacks()
 	s := "## " + l.title + " ##\n"
 
@@ -121,12 +115,6 @@ func (l Logs) ErrorMarkDown() string {
 func (l Logs) ErrorText() string {
 	if l.Error == nil {
 		return ""
-	}
-	if l == nil {
-		panic("cannot get the error from a nil error911.Logs")
-	}
-	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.Logs")
 	}
 	_, es, est := l.Error.Stacks()
 	s := "=== " + l.title + " ===\n"
