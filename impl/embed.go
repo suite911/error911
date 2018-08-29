@@ -11,28 +11,14 @@ type Embed struct {
 }
 
 // Init the error stack to a non-nil error value
-func (emb *Embed) Init(title string, cause error, msg ...interface{}) *Embed {
+func (emb *Embed) Init(title string, cause error, msg ...interface{}) {
 	if emb == nil {
-		emb = new(Embed)
+		panic("Please handle the case of nil Embed in your wrapper; see the MyError example code for details.")
 	}
 	if cause == nil {
 		cause = errors.New(title)
 	}
 	emb.cause = errors.Wrap(cause, fmt.Sprint(msg...))
-	return emb
-}
-
-// Return a new error stack with the current stack pushed beneath the new error value
-func (emb *Embed) New(title string, immediateCause error, msg ...interface{}) *Embed {
-	if emb == nil {
-		return emb.Init(title, immediateCause, msg...)
-	}
-	message := fmt.Sprint(msg...)
-	if immediateCause != nil {
-		message = fmt.Sprintf("%q: %q", message, immediateCause)
-	}
-	emb.cause = errors.Wrap(emb.cause, "\uff62" + message + "\uff63")
-	return emb
 }
 
 // Get the previous error, which is assumed to have caused this one
@@ -60,6 +46,18 @@ func (emb Embed) First() error {
 		}
 	}
 	return e
+}
+
+// Push a new error onto the error stack
+func (emb *Embed) Push(title string, immediateCause error, msg ...interface{}) {
+	if emb == nil {
+		panic("Please handle the case of nil Embed in your wrapper; see the MyError example code for details.")
+	}
+	message := fmt.Sprint(msg...)
+	if immediateCause != nil {
+		message = fmt.Sprintf("%q: %q", message, immediateCause)
+	}
+	emb.cause = errors.Wrap(emb.cause, "\uff62" + message + "\uff63")
 }
 
 // Return the error stacks
