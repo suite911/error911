@@ -7,10 +7,23 @@ type MyError struct {
 }
 
 func New(title string, cause error, msg ...interface{}) *MyError {
-	return new(MyError).Init(title, cause, msg...)
+	err := new(MyError)
+	err.Init(title, cause, msg...)
+	return err
 }
 
 func (err *MyError) Init(title string, cause error, msg ...interface{}) *MyError {
-	err.Impl.Init(title, cause, msg...)
+	if err == nil {
+		return New(title, cause, msg...)
+	}
+	err.Embed.Init(title, cause, msg...)
+	return err
+}
+
+func (err *MyError) New(title string, immediateCause error, msg ...interface{}) *MyError {
+	if err == nil {
+		return New(title, cause, msg...)
+	}
+	err.Embed.New(title, cause, msg...)
 	return err
 }
