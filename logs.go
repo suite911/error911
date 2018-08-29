@@ -178,5 +178,5 @@ func (l *Logs) Push(msg ...interface{}) {
 	if l.pIError == nil {
 		panic("cannot push to an uninitialized error911.Logs")
 	}
-	l.pIError.push(l.title, msg...)
+	(*l.pIError).push(l.title, msg...)
 }
