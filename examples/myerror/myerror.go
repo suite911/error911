@@ -20,7 +20,7 @@ func (err *MyError) Init(title string, cause error, msg ...interface{}) *MyError
 	return err
 }
 
-func (err *MyError) New(title string, immediateCause error, msg ...interface{}) *MyError {
+func (err *MyError) Push(title string, immediateCause error, msg ...interface{}) *MyError {
 	if err == nil {
 		return New(title, cause, msg...)
 	}
