@@ -4,48 +4,37 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/suite911/error911"
+
 	"github.com/pkg/browser"
 )
 
 var NeverOpenErrorsInBrowser bool
 
-// Logs references an error and contains a log
-type Logs struct {
-	Entries []*LogEntry // The entries in the log
+// LogAndError represents a log of events and a possible error stack
+type LogAndError struct {
+	Entries []*LogEntry    // The entries in the log
+	Error   error911.Error // The error stack
 
-	pIError interface{}
 	title   string
 }
 
-// Create a new Logs and initialize it
-func NewLog(title string, pIError interface{}) *Logs {
-	return new(Logs).Init(title, pIError)
+// Create a new LogAndError and initialize it
+func NewLog(title string) *LogAndError {
+	return new(LogAndError).Init(title)
 }
 
-// Initialize the Logs
-func (l *Logs) Init(title string, pIError interface{}) *Logs {
+// Initialize the LogAndError
+func (l *LogAndError) Init(title string) *LogAndError {
 	if len(title) < 1 {
 		title = "Error"
 	}
-	if pIError == nil {
-		panic("pIError is mandatory")
-	}
-	pInterface, ok := pIError.(*interface{})
-	if !ok {
-		panic(fmt.Sprintf("pIError must be pointer to type implementing " +
-			"github.com/suite911/error911.IError, not %T", pIError))
-	}
-	if _, ok := (*pInterface).(IError); !ok {
-		panic(fmt.Sprintf("pIError must be pointer to type implementing " +
-			"github.com/suite911/error911.IError, not %T", pIError))
-	}
-	l.pIError = pIError
 	l.title = title
 	return l
 }
 
 // Try to open the error in a browser window for debugging
-func (l *Logs) ErrorBrowser() {
+func (l LogAndError) ErrorBrowser() {
 	if NeverOpenErrorsInBrowser {
 		return
 	}
@@ -59,14 +48,11 @@ func (l *Logs) ErrorBrowser() {
 }
 
 // Get the full text of the error stacks as HTML
-func (l *Logs) ErrorHTML() string {
-	if l == nil {
-		panic("cannot get the error from a nil error911.Logs")
+func (l LogAndError) ErrorHTML() string {
+	if l.Error == nil {
+		return ""
 	}
-	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.Logs")
-	}
-	_, es, est := l.iError().Stacks()
+	_, es, est := l.Error.Stacks()
 	s := "<h2>" + l.title + "</h2>\n"
 
 	if len(l.Entries) > 0 {
@@ -95,14 +81,17 @@ func (l *Logs) ErrorHTML() string {
 }
 
 // Get the full text of the error stacks as markdown
-func (l *Logs) ErrorMarkDown() string {
+func (l LogAndError) ErrorMarkDown() string {
+	if l.Error == nil {
+		return ""
+	}
 	if l == nil {
-		panic("cannot get the error from a nil error911.Logs")
+		panic("cannot get the error from a nil error911.LogAndError")
 	}
 	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.Logs")
+		panic("cannot get the error from an uninitialized error911.LogAndError")
 	}
-	_, es, est := l.iError().Stacks()
+	_, es, est := l.Error.Stacks()
 	s := "## " + l.title + " ##\n"
 
 	if len(l.Entries) > 0 {
@@ -131,14 +120,17 @@ func (l *Logs) ErrorMarkDown() string {
 }
 
 // Get the full text of the error stacks as plain text
-func (l *Logs) ErrorText() string {
+func (l LogAndError) ErrorText() string {
+	if l.Error == nil {
+		return ""
+	}
 	if l == nil {
-		panic("cannot get the error from a nil error911.Logs")
+		panic("cannot get the error from a nil error911.LogAndError")
 	}
 	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.Logs")
+		panic("cannot get the error from an uninitialized error911.LogAndError")
 	}
-	_, es, est := l.iError().Stacks()
+	_, es, est := l.Error.Stacks()
 	s := "=== " + l.title + " ===\n"
 
 	if len(l.Entries) > 0 {
@@ -168,28 +160,9 @@ func (l *Logs) ErrorText() string {
 }
 
 // Append an entry to the log
-func (l *Logs) Logs(language, subTitle string, msg ...interface{}) {
+func (l *LogAndError) Log(language, subTitle string, msg ...interface{}) {
 	if l == nil {
-		panic("cannot log to a nil error911.Logs")
-	}
-	if l.pIError == nil {
-		panic("cannot log to an uninitialized error911.Logs")
-		// actually we can but it's better to fail fast
+		panic("cannot log to a nil error911.LogAndError")
 	}
 	l.Entries = append(l.Entries, NewLogEntry(language, subTitle, msg...))
-}
-
-// Push an error onto the error stack
-func (l *Logs) Push(msg ...interface{}) {
-	if l == nil {
-		panic("cannot push to a nil error911.Logs")
-	}
-	if l.pIError == nil {
-		panic("cannot push to an uninitialized error911.Logs")
-	}
-	l.iError().Push_(l.title, msg...)
-}
-
-func (l *Logs) iError() IError {
-	return (*l.pIError.(*interface{})).(IError)
 }
