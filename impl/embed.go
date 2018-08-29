@@ -50,7 +50,7 @@ func (emb Embed) First() error {
 }
 
 // Return the error stacks
-func (emb Embed) Stacks() (first error, stack string, earliesttStackTrace errors.StackTrace) {
+func (emb Embed) Stacks() (first error, stack string, earliestStackTrace errors.StackTrace) {
 	var est errors.StackTrace
 	var es string
 	var e error = emb
