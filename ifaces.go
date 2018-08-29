@@ -8,7 +8,7 @@ type Causer interface {
 }
 
 // An interface used by the type E911 struct
-type E911Interface interface {
+type IError interface {
 	Cause() error
 	Error() string
 	First() error
