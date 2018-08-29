@@ -173,5 +173,5 @@ func (l *Log) Push(msg ...interface{}) {
 	if l.pError == nil {
 		panic("cannot push to an uninitialized error911.Log")
 	}
-	l.pError.Push(l.title, msg...)
+	l.pError.push(l.title, msg...)
 }
