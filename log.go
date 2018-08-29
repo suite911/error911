@@ -1,5 +1,13 @@
 package error911
 
+import (
+	"fmt"
+	"strings"
+
+	"github.com/pkg/browser"
+	"github.com/pkg/errors"
+)
+
 var NeverOpenErrorsInBrowser bool
 
 // Log references an error and contains a log
