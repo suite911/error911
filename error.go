@@ -10,12 +10,6 @@ type Error struct {
 	err error
 }
 
-// Initialize the Error implementation with a title
-func (err *Error) Init(title string) *Error {
-	err.log.Title = title
-	return err
-}
-
 // Get the previous error, which is assumed to have caused tthis one
 func (err *Error) Cause() error {
 	return err.err
@@ -41,15 +35,6 @@ func (err *Error) First() error {
 		}
 	}
 	return e
-}
-
-// Push an error onto the error stack
-func (err *Error) Push(title string, msg ...interface{}) {
-	cause := err.err
-	if cause == nil {
-		cause = errors.New(title)
-	}
-	err.err = errors.Wrap(cause, "\uff62" + fmt.Sprint(msg...) + "\uff63")
 }
 
 // Return the error stacks
@@ -81,4 +66,12 @@ func (err *Error) Stacks() (first error, stack string, earliestStackTrace errors
 		}
 	}
 	return e, es, est
+}
+
+func (err *Error) push(title string, msg ...interface{}) {
+	cause := err.err
+	if cause == nil {
+		cause = errors.New(title)
+	}
+	err.err = errors.Wrap(cause, "\uff62" + fmt.Sprint(msg...) + "\uff63")
 }
