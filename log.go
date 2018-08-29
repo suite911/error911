@@ -1,5 +1,7 @@
 package error911
 
+var NeverOpenErrorsInBrowser bool
+
 // Log references an error and contains a log
 type Log struct {
 	Entries []*LogEntry // The entries in the log
@@ -18,6 +20,20 @@ func (l *Log) Init(title string, pErr *error) *Log {
 	l.pError = pErr
 	l.title = title
 	return l
+}
+
+// Try to open the error in a browser window for debugging
+func (l *Log) ErrorBrowser() {
+	if NeverOpenErrorsInBrowser {
+		return
+	}
+	s := `<!DOCTYPE html>
+<html>
+<body>` + l.ErrorHTML() + `
+</body>
+</html>`
+	defer recover()
+	browser.OpenReader(strings.NewReader(s))
 }
 
 // Get the full text of the error stacks as HTML
