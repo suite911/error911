@@ -1,9 +1,9 @@
 package myerror
 
-import "github.com/suite911/error911"
+import "github.com/suite911/error911/impl"
 
 type MyError struct {
-	error911.Impl
+	impl.Embed
 }
 
 func New(title string, cause error, msg ...interface{}) *MyError {
