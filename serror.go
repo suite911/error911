@@ -10,15 +10,6 @@ type SError struct {
 	err error
 }
 
-func New(e error, msg ...interface{}) *SError {
-	return new(SError).Init(e, msg...)
-}
-
-func (err *SError) Init(e error, msg ...interface{}) *SError {
-	err.err = errors.Wrap(e, fmt.Sprint(msg...))
-	return err
-}
-
 // Get the previous error, which is assumed to have caused this one
 func (err *SError) Cause() error {
 	return err.err
