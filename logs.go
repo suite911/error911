@@ -35,8 +35,7 @@ func (l *Logs) Init(title string, pIError interface{}) *Logs {
 		panic(fmt.Sprintf("pIError must be pointer to type implementing " +
 			"github.com/suite911/error911.IError, not %T", pIError))
 	}
-	_, ok := (*pInterface).(IError)
-	if !ok {
+	if _, ok := (*pInterface).(IError); !ok {
 		panic(fmt.Sprintf("pIError must be pointer to type implementing " +
 			"github.com/suite911/error911.IError, not %T", pIError))
 	}
