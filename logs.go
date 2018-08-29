@@ -13,24 +13,24 @@ var NeverOpenErrorsInBrowser bool
 type Logs struct {
 	Entries []*LogEntry // The entries in the log
 
-	pError  *IError
+	pIError *IError
 	title   string
 }
 
 // Create a new Logs and initialize it
-func NewLog(title string, pError *IError) *Logs {
-	return new(Logs).Init(title, pError)
+func NewLog(title string, pIError *IError) *Logs {
+	return new(Logs).Init(title, pIError)
 }
 
 // Initialize the Logs
-func (l *Logs) Init(title string, pError *IError) *Logs {
+func (l *Logs) Init(title string, pIError *IError) *Logs {
 	if len(title) < 1 {
 		title = "Error"
 	}
-	if pError == nil {
-		panic("pError is mandatory")
+	if pIError == nil {
+		panic("pIError is mandatory")
 	}
-	l.pError = pError
+	l.pIError = pIError
 	l.title = title
 	return l
 }
@@ -54,10 +54,10 @@ func (l *Logs) ErrorHTML() string {
 	if l == nil {
 		panic("cannot get the error from a nil error911.Logs")
 	}
-	if l.pError == nil {
+	if l.pIError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := (*l.pError).Stacks()
+	_, es, est := (*l.pIError).Stacks()
 	s := "<h2>" + l.title + "</h2>\n"
 
 	if len(l.Entries) > 0 {
@@ -90,10 +90,10 @@ func (l *Logs) ErrorMarkDown() string {
 	if l == nil {
 		panic("cannot get the error from a nil error911.Logs")
 	}
-	if l.pError == nil {
+	if l.pIError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := (*l.pError).Stacks()
+	_, es, est := (*l.pIError).Stacks()
 	s := "## " + l.title + " ##\n"
 
 	if len(l.Entries) > 0 {
@@ -126,10 +126,10 @@ func (l *Logs) ErrorText() string {
 	if l == nil {
 		panic("cannot get the error from a nil error911.Logs")
 	}
-	if l.pError == nil {
+	if l.pIError == nil {
 		panic("cannot get the error from an uninitialized error911.Logs")
 	}
-	_, es, est := (*l.pError).Stacks()
+	_, es, est := (*l.pIError).Stacks()
 	s := "=== " + l.title + " ===\n"
 
 	if len(l.Entries) > 0 {
@@ -163,7 +163,7 @@ func (l *Logs) Logs(language, subTitle string, msg ...interface{}) {
 	if l == nil {
 		panic("cannot log to a nil error911.Logs")
 	}
-	if l.pError == nil {
+	if l.pIError == nil {
 		panic("cannot log to an uninitialized error911.Logs")
 		// actually we can but it's better to fail fast
 	}
@@ -175,8 +175,8 @@ func (l *Logs) Push(msg ...interface{}) {
 	if l == nil {
 		panic("cannot push to nil error911.Logs")
 	}
-	if l.pError == nil {
+	if l.pIError == nil {
 		panic("cannot push to an uninitialized error911.Logs")
 	}
-	l.pError.push(l.title, msg...)
+	l.pIError.push(l.title, msg...)
 }
