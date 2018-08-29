@@ -10,16 +10,29 @@ type Embed struct {
 	cause error
 }
 
-func (emb *Embed) Init(title string, immediateCause error, msg ...interface{}) string {
-	if immediateCause == nil {
-		immediateCause = errors.New(title)
+// Init the error stack to a non-nil error value
+func (emb *Embed) Init(title string, cause error, msg ...interface{}) *Embed {
+	if emb == nil {
+		emb = new(Embed)
 	}
-	text := "\uff62" + fmt.Sprintf("%q: %q", fmt.Sprint(msg...), cause) + "\uff63"
-	if emb.cause == nil {
-		emb.cause = errors.Wrap(immediateCause, text)
-	} else {
-		emb.cause = errors.Wrap(emb.cause, text)
+	if cause == nil {
+		cause = errors.New(title)
 	}
+	emb.cause = errors.Wrap(cause, fmt.Sprint(msg...))
+	return emb
+}
+
+// Return a new error stack with the current stack pushed beneath the new error value
+func (emb *Embed) New(title string, immediateCause error, msg ...interface{}) *Embed {
+	if emb == nil {
+		return emb.Init(title, immediateCause, msg...)
+	}
+	message := fmt.Sprint(msg...)
+	if immediateCause != nil {
+		message = fmt.Sprintf("%q: %q", message, immediateCause)
+	}
+	emb.cause = errors.Wrap(emb.cause, "\uff62" + message + "\uff63")
+	return emb
 }
 
 // Get the previous error, which is assumed to have caused this one
