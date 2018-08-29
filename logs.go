@@ -4,28 +4,26 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/suite911/error911"
-
 	"github.com/pkg/browser"
 )
 
 var NeverOpenErrorsInBrowser bool
 
-// LogAndError represents a log of events and a possible error stack
-type LogAndError struct {
-	Entries []*LogEntry    // The entries in the log
-	Error   error911.Error // The error stack
+// Logs represents a log of events and a possible error stack
+type Logs struct {
+	Entries []*LogEntry // The entries in the log
+	Error   Error       // The error stack
 
 	title   string
 }
 
-// Create a new LogAndError and initialize it
-func NewLog(title string) *LogAndError {
-	return new(LogAndError).Init(title)
+// Create a new Logs and initialize it
+func NewLog(title string) *Logs {
+	return new(Logs).Init(title)
 }
 
-// Initialize the LogAndError
-func (l *LogAndError) Init(title string) *LogAndError {
+// Initialize the Logs
+func (l *Logs) Init(title string) *Logs {
 	if len(title) < 1 {
 		title = "Error"
 	}
@@ -34,7 +32,7 @@ func (l *LogAndError) Init(title string) *LogAndError {
 }
 
 // Try to open the error in a browser window for debugging
-func (l LogAndError) ErrorBrowser() {
+func (l Logs) ErrorBrowser() {
 	if NeverOpenErrorsInBrowser {
 		return
 	}
@@ -48,7 +46,7 @@ func (l LogAndError) ErrorBrowser() {
 }
 
 // Get the full text of the error stacks as HTML
-func (l LogAndError) ErrorHTML() string {
+func (l Logs) ErrorHTML() string {
 	if l.Error == nil {
 		return ""
 	}
@@ -81,15 +79,15 @@ func (l LogAndError) ErrorHTML() string {
 }
 
 // Get the full text of the error stacks as markdown
-func (l LogAndError) ErrorMarkDown() string {
+func (l Logs) ErrorMarkDown() string {
 	if l.Error == nil {
 		return ""
 	}
 	if l == nil {
-		panic("cannot get the error from a nil error911.LogAndError")
+		panic("cannot get the error from a nil error911.Logs")
 	}
 	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.LogAndError")
+		panic("cannot get the error from an uninitialized error911.Logs")
 	}
 	_, es, est := l.Error.Stacks()
 	s := "## " + l.title + " ##\n"
@@ -120,15 +118,15 @@ func (l LogAndError) ErrorMarkDown() string {
 }
 
 // Get the full text of the error stacks as plain text
-func (l LogAndError) ErrorText() string {
+func (l Logs) ErrorText() string {
 	if l.Error == nil {
 		return ""
 	}
 	if l == nil {
-		panic("cannot get the error from a nil error911.LogAndError")
+		panic("cannot get the error from a nil error911.Logs")
 	}
 	if l.pIError == nil {
-		panic("cannot get the error from an uninitialized error911.LogAndError")
+		panic("cannot get the error from an uninitialized error911.Logs")
 	}
 	_, es, est := l.Error.Stacks()
 	s := "=== " + l.title + " ===\n"
@@ -160,9 +158,9 @@ func (l LogAndError) ErrorText() string {
 }
 
 // Append an entry to the log
-func (l *LogAndError) Log(language, subTitle string, msg ...interface{}) {
+func (l *Logs) Log(language, subTitle string, msg ...interface{}) {
 	if l == nil {
-		panic("cannot log to a nil error911.LogAndError")
+		panic("cannot log to a nil error911.Logs")
 	}
 	l.Entries = append(l.Entries, NewLogEntry(language, subTitle, msg...))
 }
