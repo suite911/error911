@@ -7,14 +7,14 @@ type Causer interface {
 	Cause() error
 }
 
-// An interface used by the type E911 struct
+/*
 type IError interface {
 	Cause() error
 	Error() string
 	First() error
-	Push_(string, ...interface{})
 	Stacks() (error, string, errors.StackTrace)
 }
+*/
 
 // StackTracer is defined as "stackTracer" in "github.com/pkg/errors" but unexported
 type StackTracer interface {
