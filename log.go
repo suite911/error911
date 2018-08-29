@@ -2,9 +2,10 @@ package error911
 
 // Log references an error and contains a log
 type Log struct {
-	Entries []*LogEntry
+	Entries []*LogEntry // The entries in the log
+
 	pError  *error
-	Title   string
+	title   string
 }
 
 // Create a new Log and initialize it
@@ -15,7 +16,7 @@ func NewLog(title string, pErr *error) *Log {
 // Initialize the Log
 func (l *Log) Init(title string, pErr *error) *Log {
 	l.pError = pErr
-	l.Title = title
+	l.title = title
 	return l
 }
 
@@ -28,7 +29,7 @@ func (l *Log) ErrorHTML() string {
 		panic("cannot get the error from an uninitialized error911.Log")
 	}
 	_, es, est := l.pError.Stacks()
-	s := "<h2>" + l.Title + "</h2>\n"
+	s := "<h2>" + l.title + "</h2>\n"
 
 	if len(l.Entries) > 0 {
 		s += "<h3>Log</h3>\n"
@@ -64,7 +65,7 @@ func (l *Log) ErrorMarkDown() string {
 		panic("cannot get the error from an uninitialized error911.Log")
 	}
 	_, es, est := l.pError.Stacks()
-	s := "## " + l.Title + " ##\n"
+	s := "## " + l.title + " ##\n"
 
 	if len(l.Entries) > 0 {
 		s += "### Log ###\n"
@@ -100,7 +101,7 @@ func (l *Log) ErrorText() string {
 		panic("cannot get the error from an uninitialized error911.Log")
 	}
 	_, es, est := l.pError.Stacks()
-	s := "=== " + l.Title + " ===\n"
+	s := "=== " + l.title + " ===\n"
 
 	if len(l.Entries) > 0 {
 		s += "=== Log\n"
@@ -124,7 +125,7 @@ func (l *Log) ErrorText() string {
 		s += "\n"
 	}
 
-	s += "... " + l.Title + " ...\n"
+	s += "... " + l.title + " ...\n"
 	return s
 }
 
@@ -148,5 +149,5 @@ func (l *Log) Push(msg ...interface{}) {
 	if l.pError == nil {
 		panic("cannot push to an uninitialized error911.Log")
 	}
-	l.pError.Push(l.Title, msg...)
+	l.pError.Push(l.title, msg...)
 }
