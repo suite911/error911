@@ -18,13 +18,19 @@ type Logs struct {
 }
 
 // Create a new Logs and initialize it
-func NewLog(title string, pErr *error) *Logs {
-	return new(Logs).Init(title, pErr)
+func NewLog(title string, pError *error) *Logs {
+	return new(Logs).Init(title, pError)
 }
 
 // Initialize the Logs
-func (l *Logs) Init(title string, pErr *error) *Logs {
-	l.pError = pErr
+func (l *Logs) Init(title string, pError *error) *Logs {
+	if len(title) < 1 {
+		title = "Error"
+	}
+	if pError == nil {
+		panic("pError is mandatory")
+	}
+	l.pError = pError
 	l.title = title
 	return l
 }
