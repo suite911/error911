@@ -2,7 +2,6 @@ package error911
 
 import (
 	"fmt"
-	"io"
 	"strings"
 
 	"github.com/pkg/browser"
@@ -13,7 +12,6 @@ var NeverOpenErrorsInBrowser bool
 // Logs references an error and contains a log
 type Logs struct {
 	Entries []*LogEntry // The entries in the log
-	Writer  io.Writer
 
 	pIError *IError
 	title   string
