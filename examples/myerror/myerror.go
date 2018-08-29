@@ -24,6 +24,6 @@ func (err *MyError) New(title string, immediateCause error, msg ...interface{}) 
 	if err == nil {
 		return New(title, cause, msg...)
 	}
-	err.Embed.New(title, cause, msg...)
+	err.Embed.Push(title, cause, msg...)
 	return err
 }
