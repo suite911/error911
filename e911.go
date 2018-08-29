@@ -129,3 +129,8 @@ func (err *E911) ErrorText() string {
 func (err *E911) Log(language, subTitle string, msg ...interface{}) {
 	err.log.Append(language, subTitle, msg...)
 }
+
+// Push an error onto the error stack
+func (err *E911) Push(msg ...interface{}) {
+	err.Error.Push(err.log.Title, msg...)
+}
