@@ -8,45 +8,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-type E911 interface {
-	Cause() error
-	Error() string
-	ErrorBrowser()
-	ErrorHTML() string
-	ErrorMarkDown() string
-	ErrorText() string
-	First() error
-	Log(string, string, ...interface{})
-	LogHTML() string
-	LogMarkDown() string
-	LogText() string
-	Push(msg ...interface{})
-	Stacks() (error, string, errors.StackTrace)
-}
-
-type E911Impl struct {
-	err error
+type E911 struct {
+	E911Interface
 	log Log
 }
 
-// Initialize the E911 implementation with a title
-func (err *E911Impl) Init(title string) *E911Impl {
-	err.log.Title = title
-	return err
-}
-
-// Get the previous error, which is assumed to have caused tthis one
-func (err *E911Impl) Cause() error {
-	return err.err
-}
-
-// Get the text of the first error, which is assumed to have caused the others
-func (err *E911Impl) Error() string {
-	return err.First().Error()
-}
-
 // Try to open the error in a browser window for debugging
-func (err *E911Impl) ErrorBrowser() {
+func (err *E911) ErrorBrowser() {
 	s := `<!DOCTYPE html>
 <html>
 <body>` + err.ErrorHTML() + `
@@ -57,7 +25,7 @@ func (err *E911Impl) ErrorBrowser() {
 }
 
 // Get the full text of the error stacks as HTML
-func (err *E911Impl) ErrorHTML() string {
+func (err *E911) ErrorHTML() string {
 	_, es, est := err.Stacks()
 	s := "<h2>" + err.log.Title + "</h2>\n"
 
@@ -87,7 +55,7 @@ func (err *E911Impl) ErrorHTML() string {
 }
 
 // Get the full text of the error stacks as markdown
-func (err *E911Impl) ErrorMarkDown() string {
+func (err *E911) ErrorMarkDown() string {
 	_, es, est := err.Stacks()
 	s := "## " + err.log.Title + " ##\n"
 
@@ -117,7 +85,7 @@ func (err *E911Impl) ErrorMarkDown() string {
 }
 
 // Get the full text of the error stacks as plain text
-func (err *E911Impl) ErrorText() string {
+func (err *E911) ErrorText() string {
 	_, es, est := err.Stacks()
 	s := "=== " + err.log.Title + " ===\n"
 
@@ -147,64 +115,7 @@ func (err *E911Impl) ErrorText() string {
 	return s
 }
 
-// Get the first error, which is assumed to have caused the others
-func (err *E911Impl) First() error {
-	var e error = err
-	if e != nil {
-		for {
-			if c, ok := e.(Causer); ok {
-				if prev := c.Cause(); prev != nil {
-					e = prev
-					continue
-				}
-			}
-			break
-		}
-	}
-	return e
-}
-
 // Append an entry to the log
-func (err *E911Impl) Log(language, subTitle string, msg ...interface{}) {
+func (err *E911) Log(language, subTitle string, msg ...interface{}) {
 	err.log.Append(language, subTitle, msg...)
-}
-
-// Push an error onto the error stack
-func (err *E911Impl) Push(msg ...interface{}) {
-	cause := err.err
-	if cause == nil {
-		cause = errors.New(err.log.Title)
-	}
-	err.err = errors.Wrap(cause, "\uff62" + fmt.Sprint(msg...) + "\uff63")
-}
-
-// Return the error stacks
-func (err *E911Impl) Stacks() (first error, stack string, earliestStackTrace errors.StackTrace) {
-	var est errors.StackTrace
-	var es string
-	var e error = err
-	if e != nil {
-		for {
-			if len(es) > 0 {
-				es += "\n"
-			}
-			ch := " "
-			if st, ok := e.(StackTracer); ok {
-				if t := st.StackTrace(); t != nil {
-					est = t
-					ch = "*"
-				}
-			}
-			es += ch
-			es += e.Error()
-			if c, ok := e.(Causer); ok {
-				if prev := c.Cause(); prev != nil {
-					e = prev
-					continue
-				}
-			}
-			break
-		}
-	}
-	return e, es, est
 }
