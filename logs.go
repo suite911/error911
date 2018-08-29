@@ -18,17 +18,27 @@ type Logs struct {
 }
 
 // Create a new Logs and initialize it
-func NewLog(title string, pIError *IError) *Logs {
+func NewLog(title string, pIError interface{}) *Logs {
 	return new(Logs).Init(title, pIError)
 }
 
 // Initialize the Logs
-func (l *Logs) Init(title string, pIError *IError) *Logs {
+func (l *Logs) Init(title string, pIError interface{}) *Logs {
 	if len(title) < 1 {
 		title = "Error"
 	}
 	if pIError == nil {
 		panic("pIError is mandatory")
+	}
+	pInterface, ok := pIError.(*interface{})
+	if !ok {
+		panic(fmt.Sprintf("pIError must be pointer to type implementing " +
+			"github.com/suite911/error911.IError, not %T", pIError))
+	}
+	_, ok := (*pInterface).(IError)
+	if !ok {
+		panic(fmt.Sprintf("pIError must be pointer to type implementing " +
+			"github.com/suite911/error911.IError, not %T", pIError))
 	}
 	l.pIError = pIError
 	l.title = title
