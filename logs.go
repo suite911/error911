@@ -13,17 +13,17 @@ var NeverOpenErrorsInBrowser bool
 type Logs struct {
 	Entries []*LogEntry // The entries in the log
 
-	pError  *error
+	pError  *IError
 	title   string
 }
 
 // Create a new Logs and initialize it
-func NewLog(title string, pError *error) *Logs {
+func NewLog(title string, pError *IError) *Logs {
 	return new(Logs).Init(title, pError)
 }
 
 // Initialize the Logs
-func (l *Logs) Init(title string, pError *error) *Logs {
+func (l *Logs) Init(title string, pError *IError) *Logs {
 	if len(title) < 1 {
 		title = "Error"
 	}
