@@ -14,6 +14,6 @@ func (l *Log) Init(title string) *Log {
 	return l
 }
 
-func (l *Log) Append(language, subTitle string, msg ...interface{}) {
+func (l *Log) Log(language, subTitle string, msg ...interface{}) {
 	l.Entries = append(l.Entries, NewLogEntry(language, subTitle, msg...))
 }
