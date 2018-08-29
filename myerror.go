@@ -1,6 +1,8 @@
 package error911
 
-type MyError *SError;
+type MyError struct {
+	*SError
+}
 
 func New(title string, cause error, msg ...interface{}) MyError {
 	return ImplNew(title, cause, msg...)
