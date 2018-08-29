@@ -2,6 +2,7 @@ package error911
 
 import (
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/pkg/browser"
