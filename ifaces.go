@@ -12,7 +12,7 @@ type IError interface {
 	Cause() error
 	Error() string
 	First() error
-	Push(msg ...interface{})
+	Push_(string, msg ...interface{})
 	Stacks() (error, string, errors.StackTrace)
 }
 
