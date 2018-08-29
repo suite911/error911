@@ -10,12 +10,12 @@ type Error struct {
 	err error
 }
 
-func New(err error, msg ...interface{}) *Error {
-	return new(Error).Init(err, msg...)
+func New(e error, msg ...interface{}) *Error {
+	return new(Error).Init(e, msg...)
 }
 
-func (err *Error) Init(err error, msg ...interface{}) *Error {
-	err.err = errors.Wrap(err, fmt.Sprint(msg...))
+func (err *Error) Init(e error, msg ...interface{}) *Error {
+	err.err = errors.Wrap(e, fmt.Sprint(msg...))
 	return err
 }
 
